@@ -67,7 +67,9 @@ class Login extends React.Component {
             <div className="temp">
                 {this.renderRedirect()}
                 <form onSubmit={this.Submitted}>
-                    {this.state.error && <p>{this.state.error}</p>}
+                    {this.state.error && (
+                        <p className="errorshow">{this.state.error}</p>
+                    )}
                     <p>Enter username</p>
                     <p>
                         <input type="text" name="username" required={true} />

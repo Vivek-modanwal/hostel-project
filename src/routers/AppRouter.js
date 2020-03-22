@@ -62,6 +62,7 @@ class AppRouter extends React.Component {
                                     <Adminpage User={this.state.User} />
                                 </Route>
                             )}
+                            <Route path="/usercheck" component={Userpage} />
                             <Route component={NotFoundPage} />
                         </Switch>
                     </div>
