@@ -27,7 +27,6 @@ class AppRouter extends React.Component {
         }));
     };
     getComponent = Component => {
-        console.log(this.state);
         if (this.state.isAdmin) return <Redirect to="/admin" />;
         else if (this.state.isUser) return <Redirect to="/user" />;
         else return <Component authenticated={this.authenticated} />;

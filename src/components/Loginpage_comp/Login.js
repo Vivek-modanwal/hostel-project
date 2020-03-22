@@ -7,8 +7,7 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            passwordError: false,
-            invalidCredential: false,
+            error: "",
             redirect: false
         };
     }
@@ -19,12 +18,19 @@ class Login extends React.Component {
         e.target.password.value = "";
         e.target.username.value = "";
         const re = /^[A-Za-z0-9]{8,15}$/;
+        let error = "";
+        if (password.length < 8)
+            error = "password must contain atleast eight characters";
+        else if (password.length > 15)
+            error = "password must contain atmax fifteen characters";
+        else if (!re.test(password))
+            error = "password must contain only alphaNumeric characters";
         try {
             this.setState(() => ({
-                passwordError: !re.test(password),
-                invalidCredential: false
+                error: error
             }));
-            if (!re.test(password)) throw new Error("invalid password");
+            if (error) throw new Error("invalid password");
+
             const credential = {};
             credential.password = password;
             if (validator.isEmail(username)) {
@@ -32,20 +38,17 @@ class Login extends React.Component {
             } else {
                 credential.userid = username;
             }
-            const data = await axios.post(
+            const Data = await axios.post(
                 "http://localhost:5000/login",
                 credential
             );
-            this.setState(() => ({
-                invalidCredential: false
-            }));
-            this.props.authenticated(data.data);
+            this.props.authenticated(Data.data);
             this.setRedirect();
         } catch (e) {
             const error = e.response;
             if (error && error.status >= 400 && error.status < 500)
                 this.setState(() => ({
-                    invalidCredential: true
+                    error: "invalid username or password"
                 }));
         }
     };
@@ -64,9 +67,7 @@ class Login extends React.Component {
             <div className="temp">
                 {this.renderRedirect()}
                 <form onSubmit={this.Submitted}>
-                    {this.state.invalidCredential && (
-                        <p>username or password is incorrect</p>
-                    )}
+                    {this.state.error && <p>{this.state.error}</p>}
                     <p>Enter username</p>
                     <p>
                         <input type="text" name="username" required={true} />
@@ -79,8 +80,6 @@ class Login extends React.Component {
                             required={true}
                         />
                     </p>
-                    {this.state.passwordError && <p>password is invalid</p>}
-
                     <input type="submit" value="Submit" />
                     <div className="separate.signup_forget">
                         <div>
