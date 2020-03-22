@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch, Link, NavLink } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Homepage from "../components/Homepage";
 import Loginpage from "../components/Loginpage";
 import Signup from "../components/Signuppage";
@@ -12,43 +12,65 @@ import Footer from "../components/Footer";
 import Passwordreset from "../components/Passwordresetpage";
 
 class AppRouter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAuthenticated: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            isAdmin: false,
+            isUser: false
+        };
+    }
+    authenticated = data => {
+        this.setState(() => ({
+            isAdmin: data.admin,
+            isUser: !data.admin,
+            User: data.User
+        }));
     };
-  }
-  render() {
-    return (
-      <BrowserRouter>
-        <div>
-          <div className="fullpadding">
-            <Header />
-            <Switch>
-              <Route path="/" component={Homepage} exact={true} />
-              <Route path="/login" component={Loginpage} />
-              <Route path="/signup" component={Signup} />
-              <Route path="/help" component={HelpPage} />
-              <Route path="/passreset" component={Passwordreset} />
-              {this.state.isAuthenticated && (
-                <Route path="/user" component={Userpage} />
-              )}
+    getComponent = Component => {
+        if (this.state.isAdmin) return <Redirect to="/admin" />;
+        else if (this.state.isUser) return <Redirect to="/user" />;
+        else return <Component authenticated={this.authenticated} />;
+    };
 
-              {this.state.isAuthenticated && (
-                <Route path="/admin" component={Adminpage} />
-              )}
-              {/* temporary */}
-              <Route path="/admincheck" component={Adminpage} />
-              <Route path="/usercheck" component={Userpage} />
+    render() {
+        return (
+            <BrowserRouter>
+                <div>
+                    <div className="fullpadding">
+                        <Header />
+                        <Switch>
+                            <Route path="/" component={Homepage} exact={true} />
+                            <Route path="/login">
+                                {this.getComponent(Loginpage)}
+                            </Route>
+                            <Route path="/signup">
+                                {this.getComponent(Signup)}
+                            </Route>
+                            <Route path="/help" component={HelpPage} />
+                            <Route
+                                path="/passreset"
+                                component={Passwordreset}
+                            />
+                            {this.state.isUser && (
+                                <Route path="/user">
+                                    <Userpage User={this.state.User} />
+                                </Route>
+                            )}
 
-              <Route component={NotFoundPage} />
-            </Switch>
-          </div>
-          <Footer />
-        </div>
-      </BrowserRouter>
-    );
-  }
+                            {this.state.isAdmin && (
+                                <Route path="/admin">
+                                    <Adminpage User={this.state.User} />
+                                </Route>
+                            )}
+                            <Route path="/usercheck" component={Userpage} />
+                            <Route component={NotFoundPage} />
+                        </Switch>
+                    </div>
+                    <Footer />
+                </div>
+            </BrowserRouter>
+        );
+    }
 }
 
 export default AppRouter;
