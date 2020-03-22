@@ -1,78 +1,101 @@
 import React from "react";
 import validator from "validator";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, Redirect } from "react-router-dom";
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      passwordError: ""
-    };
-  }
-  Submitted = e => {
-    e.preventDefault();
-    const password = e.target.password.value;
-    const username = e.target.username.value.trim();
-    e.target.password.value = "";
-    e.target.username.value = "";
-    console.log(password);
-    const re = /^[A-Za-z0-9]{8,15}$/;
-
-    this.setState(() => ({
-      passwordError: re.test(password) ? "" : "please enter valid password"
-    }));
-
-    const credential = {};
-    credential.password = password;
-    if (validator.isEmail(username)) {
-      credential.email = username;
-    } else {
-      credential.userid = username;
+    constructor(props) {
+        super(props);
+        this.state = {
+            error: "",
+            redirect: false
+        };
     }
-    console.log(credential);
-    fetch("http://localhost:3000/login", {
-      method: "POST",
-      body: JSON.stringify(credential),
-      headers: {
-        "Content-type": "application/ json; charset = UTF - 8"
-      }
-    })
-      .then(res => {
-        res.json();
-      })
-      .then(data => console.log(data))
-      .catch(e => "please enter valid credentials");
-  };
-  render() {
-    return (
-      <div className="temp">
-        <form onSubmit={this.Submitted}>
-          <p>Enter username</p>
-          <p>
-            <input type="text" name="username" required={true} />
-          </p>
-          <p>Enter password</p>
-          <p>
-            <input type="password" name="password" required={true} />
-          </p>
-          {this.state.passwordError && <p>{this.state.passwordError}</p>}
+    Submitted = async e => {
+        e.preventDefault();
+        const password = e.target.password.value;
+        const username = e.target.username.value.trim();
+        e.target.password.value = "";
+        e.target.username.value = "";
+        const re = /^[A-Za-z0-9]{8,15}$/;
+        let error = "";
+        if (password.length < 8)
+            error = "password must contain atleast eight characters";
+        else if (password.length > 15)
+            error = "password must contain atmax fifteen characters";
+        else if (!re.test(password))
+            error = "password must contain only alphaNumeric characters";
+        try {
+            this.setState(() => ({
+                error: error
+            }));
+            if (error) throw new Error("invalid password");
 
-          <input type="submit" value="Submit" />
-          <div className="separate.signup_forget">
-            <div>
-              <p>Don't have an Account ?</p>
-              <p>
-                <Link to="/signup">Sign up</Link>
-              </p>
+            const credential = {};
+            credential.password = password;
+            if (validator.isEmail(username)) {
+                credential.email = username;
+            } else {
+                credential.userid = username;
+            }
+            const Data = await axios.post(
+                "http://localhost:5000/login",
+                credential
+            );
+            this.props.authenticated(Data.data);
+            this.setRedirect();
+        } catch (e) {
+            const error = e.response;
+            if (error && error.status >= 400 && error.status < 500)
+                this.setState(() => ({
+                    error: "invalid username or password"
+                }));
+        }
+    };
+    setRedirect = () => {
+        this.setState({
+            redirect: true
+        });
+    };
+    renderRedirect = () => {
+        if (this.state.redirect) {
+            return <Redirect to="/admin" />;
+        }
+    };
+    render() {
+        return (
+            <div className="temp">
+                {this.renderRedirect()}
+                <form onSubmit={this.Submitted}>
+                    {this.state.error && <p>{this.state.error}</p>}
+                    <p>Enter username</p>
+                    <p>
+                        <input type="text" name="username" required={true} />
+                    </p>
+                    <p>Enter password</p>
+                    <p>
+                        <input
+                            type="password"
+                            name="password"
+                            required={true}
+                        />
+                    </p>
+                    <input type="submit" value="Submit" />
+                    <div className="separate.signup_forget">
+                        <div>
+                            <p>Don't have an Account ?</p>
+                            <p>
+                                <Link to="/signup">Sign up</Link>
+                            </p>
+                        </div>
+                        <p>
+                            <Link to="/pass_reset">Forget Password</Link>
+                        </p>
+                    </div>
+                </form>
             </div>
-            <p>
-              <Link to="/pass_reset">Forget Password</Link>
-            </p>
-          </div>
-        </form>
-      </div>
-    );
-  }
+        );
+    }
 }
 
 export default Login;
