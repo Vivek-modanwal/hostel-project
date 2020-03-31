@@ -1,44 +1,50 @@
 .header0 {
-  background: linear-gradient(to right, rgb(21, 32, 63), rgb(101, 183, 216));
+  background: linear-gradient(to right, #03b4b4, #28a7a0);
+  box-shadow: 0px 0px 40px #88f1f8 inset;
 }
 .header01 {
-  font-weight: bold;
-  padding: 10px;
-  padding-bottom: 1px;
-  color: #efffb6;
-  max-width: 80rem;
-  margin: 0 auto;
+  font-size: xx-large;
+  padding-top: 20px;
+  padding-left: 20px;
+  margin: 0px;
+  font-family: "Arial Narrow Bold", sans-serif;
+  text-shadow: 5px 3px 4px #000000;
+  color: #fafafa;
 }
 
 .header1 {
-  font-weight: small;
+  padding-left: 20px;
+  font-size: 15px;
   font-style: italic;
-
-  color: #adadad;
-  padding-bottom: 10px;
+  text-shadow: 0px 0px 2px #686908e1;
+  color: #141413;
 }
 .nav0 {
-  background-color: #000000;
-  padding: 9px;
-  text-decoration: none;
+  background-color: #013d3a;
+  padding: 8px;
+  box-shadow: 0px -2px 15px #002731;
 }
+
 .nav1 {
-  background-color: #474747;
-  color: white;
+  background-color: #dad5d5;
+
+  color: #000000;
   padding: 8px;
   padding-left: 20px;
   padding-right: 20px;
-  border-right: 2px solid rgb(136, 133, 133);
-  border-bottom: 2px solid rgb(136, 133, 133);
+  border-right: 4px solid #013d3a;
   text-decoration: none;
+
+  text-shadow: 0px 0px 2px #000000e1;
+  box-shadow: 0px 0px 6px #000000 inset;
 }
-.nav1:hover {
-  background-color: #b4b4b4;
+#0e0d0d #202020 #3d3c3c .nav1:hover {
+  background-color: #9b9b9b;
 }
-.nav1:active {
-  background-color: #444444;
-}
+
 .nav2 {
-  background-color: #c0c0c0;
-  color: #000000;
+  background-color: #001b1a;
+  color: white;
+
+  box-shadow: 0px 0px 8px #029783 inset;
 }

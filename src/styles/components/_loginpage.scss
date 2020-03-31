@@ -1,21 +1,19 @@
 .loginflex {
-  padding: 40px;
   display: flex;
   justify-content: space-between;
+  background-color: #88bddb;
 }
 .login {
-  margin: 30px;
-  padding: 30px;
-  margin-left: 100px;
-  background: linear-gradient(to left, rgba(240, 235, 235, 0), #6594af);
+  border-left: 100px solid #88bddb;
+  padding: 30px 220px 200px 100px;
+
+  margin-left: 142 px;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), #036299);
 }
 .logininfo {
-  margin: 30px;
-  padding: 30px;
-  padding-bottom: 0px;
-  background-color: #959494;
-  margin-right: 250px;
-  width: 200px;
+  padding: 30px 50px 200px 30px;
+
+  background-color: #7a7878;
 }
 .separate.signup_forget {
   font-size: smaller;

@@ -1,91 +1,71 @@
 import React from "react";
+import Page1 from "./Addhostel_comp/Page1";
+import Page2 from "./Addhostel_comp/Page2";
+import Page3 from "./Addhostel_comp/Page3";
+import Page4 from "./Addhostel_comp/Page4";
 
 class Addhostel extends React.Component {
     state = {
-        capacityerror: ""
+        step: 1,
+        hostelName: "",
+        roomCapacity: "1",
+        roomRange: "",
+        disabledRoomRange: "",
+        wrapAround: true,
+        uploaded: false
     };
-    Submitted = e => {
-        e.preventDefault();
-        const hostelname = e.target.hostelname.value.trim();
-        const capacity = e.target.capacity.value;
-        e.target.hostelname.value = "";
-        e.target.capacity.value = "";
-        console.log(capacity);
-        const re = /^[0-9]{1,4}$/;
 
-        this.setState(() => ({
-            capacityerror: re.test(capacity)
-                ? ""
-                : "! please enter positive integer value only"
-        }));
-
-        const credential = {};
-        credential.hostelname = hostelname;
-
-        fetch("http://localhost:3000/admincheck", {
-            method: "GET",
-            body: JSON.stringify(credential),
-            headers: {
-                "Content-type": "application/ json; charset = UTF - 8"
-            }
-        })
-            .then(res => {
-                res.json();
-            })
-            .then(data => console.log(data))
-            .catch(e => "please enter valid credentials");
+    nextStep = () => {
+        const { step } = this.state;
+        this.setState({
+            step: step + 1
+        });
     };
+    prevStep = () => {
+        const { step } = this.state;
+        this.setState({
+            step: step - 1
+        });
+    };
+
+    handleChange = hostelData => {
+        this.setState(() => hostelData);
+    };
+
+    uploaded = () => {
+        this.setState(() => ({ uploaded: true }));
+    };
+
     render() {
-        return (
-            <div>
-                <h1 className="adminheading">Add new hostel here</h1>
-                <p>Please fill in the following details...</p>
-                <form onSubmit={this.Submitted}>
-                    <p>Hostel name</p>
-                    <p>
-                        <input type="text" name="hostelname" required={true} />
-                    </p>
-                    <p>Hostel capacity</p>
-                    <p>
-                        <input type="number" name="capacity" required={true} />
-                    </p>
-                    {this.state.capacityerror && (
-                        <p className="errorshow">{this.state.capacityerror}</p>
-                    )}
-                    <p>
-                        wrap-around (to fill remaining students in already
-                        filled rooms)
-                    </p>
-                    <p>
-                        <input
-                            type="radio"
-                            id="yes"
-                            name="wrap"
-                            value="yes"
-                            required={true}
-                        />
-                        <label htmlFor="yes">Yes</label>
-                    </p>
-                    <p>
-                        <input
-                            type="radio"
-                            id="no"
-                            name="wrap"
-                            value="no"
-                            required={true}
-                        />
-                        <label htmlFor="no">No</label>
-                    </p>
-                    <p>Enter the range of rooms</p>
-                    <p>
-                        <input type="text" name="roomrange" required={true} />
-                    </p>
-
-                    <input type="submit" value="Submit" />
-                </form>
-            </div>
-        );
+        switch (this.state.step) {
+            case 1:
+                return (
+                    <Page1
+                        nextStep={this.nextStep}
+                        handleChange={this.handleChange}
+                        values={this.state}
+                    />
+                );
+            case 2:
+                return (
+                    <Page2
+                        nextStep={this.nextStep}
+                        prevStep={this.prevStep}
+                        upload={this.uploaded}
+                        uploaded={this.state.uploaded}
+                    />
+                );
+            case 3:
+                return (
+                    <Page3
+                        nextStep={this.nextStep}
+                        prevStep={this.prevStep}
+                        values={this.state}
+                    />
+                );
+            case 4:
+                return <Page4 />;
+        }
     }
 }
-
 export default Addhostel;

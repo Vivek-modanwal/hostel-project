@@ -3,8 +3,6 @@ html {
 }
 
 body {
-  // background: linear-gradient(to right, #c7c5c5, #696969);
-
   font-family: Helvetica, Arial, sans-serif;
   font-size: $m-size;
 }
@@ -23,4 +21,23 @@ button:disabled {
   color: #f5f5f5;
   background-color: #38363d;
   text-decoration: none;
+}
+.allheadings {
+  background-color: #ffffff;
+  box-shadow: 0px 0px 22px #01339e inset;
+  margin: 0px;
+  padding: 0px;
+  text-align: right;
+  color: #520101;
+}
+.basicflex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.helppage {
+  padding: 50px;
+  margin: 0px;
+  background-color: #93c9da;
+  min-height: 560px;
 }

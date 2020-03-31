@@ -5,7 +5,14 @@ class Homepage extends React.Component {
   render() {
     return (
       <div className="homeflex">
-        <div className="homeinfo">What's this!</div>
+        <div className="homeinfo">
+          <p> plz provide suggestions what to present here here!!!!</p>
+          <p> plz provide suggestions what to present here here!!!!</p>
+          <p> plz provide suggestions what to present here here!!!!</p>
+          <p> plz provide suggestions what to present here here!!!!</p>
+          <p> plz provide suggestions what to present here here!!!!</p>
+          <p> plz provide suggestions what to present here here!!!!</p>
+        </div>
         <Notice />
       </div>
     );

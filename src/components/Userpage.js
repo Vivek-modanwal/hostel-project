@@ -1,7 +1,7 @@
 import React from "react";
 import ChangePassword from "./Userpage_comp/ChangePassword";
-import AddPreferences from "./Userpage_comp/AddPreferences";
 import AllotmentResult from "./Userpage_comp/AllotmentResult";
+import AddPreferences from "./Userpage_comp/AddPreferences";
 
 class Userpage extends React.Component {
     state = {
@@ -31,7 +31,9 @@ class Userpage extends React.Component {
             allotmentResult: true
         }));
     };
+
     render() {
+        //console.log(this.props.User.disabled)
         return (
             <div className="flex-container0">
                 <div className="flex-container1">
@@ -52,6 +54,7 @@ class Userpage extends React.Component {
                                 : "flexdiv"
                         }
                         onClick={this.current}
+                        disabled={!this.props.User.editable}
                     >
                         Add Preferences
                     </button>
@@ -68,7 +71,9 @@ class Userpage extends React.Component {
                 </div>
                 <div className="admindiv">
                     {(this.state.changePassword && <ChangePassword />) ||
-                        (this.state.addPreferences && <AddPreferences />) ||
+                        (this.state.addPreferences && (
+                            <AddPreferences User={this.props.User} />
+                        )) ||
                         (this.state.allotmentResult && <AllotmentResult />)}
                 </div>
             </div>

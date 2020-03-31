@@ -6,9 +6,9 @@ const Header = () => (
     {/* temporary */}
     <NavLink to="/admincheck">admin-check</NavLink>{" "}
     <NavLink to="/usercheck">user-check</NavLink>
-    <div className="header01">
-      <h1>Welcome To Hostel Rooms Allotment System</h1>
-      <p className="header1">a better platform for easy allocation...</p>
+    <div>
+      <p className="header01">Welcome To Hostel Rooms Allocation App. ...</p>
+      <p className="header1">..a better platform for easy allocations</p>
     </div>
     <div className="nav0">
       <NavLink to="/" className="nav1" activeClassName="nav2" exact={true}>
@@ -18,6 +18,11 @@ const Header = () => (
         {" "}
         LogIn{" "}
       </NavLink>
+      <NavLink to="/signup" className="nav1" activeClassName="nav2">
+        {" "}
+        SignUp{" "}
+      </NavLink>
+
       <NavLink to="/help" className="nav1" activeClassName="nav2">
         {" "}
         Support{" "}

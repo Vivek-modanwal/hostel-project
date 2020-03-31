@@ -1,3 +1,55 @@
 .errorshow {
-    color: #ff0808;
+  color: #ff0000;
+}
+.box3-1 {
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  justify-content: space-between;
+}
+.box3-2 {
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  flex-direction: row;
+}
+.eachbox {
+  padding: 5px;
+  margin: 0px;
+  margin-left: 5px;
+  color: #c8c8c8;
+  background: #858585;
+}
+.adddetails {
+  padding: 0px;
+  margin: 0px;
+}
+.submit {
+  text-align: right;
+}
+.addhostelbuttons {
+  font-size: small;
+  margin-right: 40px;
+  padding: 3px;
+}
+.page3 {
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-bottom: 60px;
+  border: 1px solid #000000;
+}
+
+.container {
+  display: block;
+  text-align: center;
+  padding: 15px;
+  margin: 10px auto;
+}
+.csv-input {
+  background-color: #cccccc;
+  padding: 15px;
+  display: block;
+  margin: 15px auto;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 5px;
 }
