@@ -1,5 +1,5 @@
 import React from "react";
-import Option from "./Options";
+import Option from "./options";
 import Select from "react-select";
 
 export default class AddPrefernces extends React.Component {
@@ -28,6 +28,7 @@ export default class AddPrefernces extends React.Component {
         errormessage: "",
         value: ""
     };
+
     checkPreferenceList = Room => {
         if (this.props.User.disabled && this.state.disabledQuota) {
             return this.state.disabledPreferences.some(room => room === Room);
@@ -75,7 +76,11 @@ export default class AddPrefernces extends React.Component {
         this.updatePreferences(preferences);
     };
 
-    sendData = () => {
+    sendAllValue = e => {
+        e.preventDefault();
+        const referral = e.target.elements.referral.value;
+        const referee = e.target.elements.referee.value;
+        console.log(`Referral:${referral} Referee:${referee}`);
         console.log("send data");
         //send all the data by this function
         //<Redirect to="/" />
@@ -90,7 +95,7 @@ export default class AddPrefernces extends React.Component {
             this.setState(() => ({
                 errormessage: "please select any room"
             }));
-        } else if (this.getPreferences().length > 5) {
+        } else if (this.getPreferences().length > 10) {
             this.setState(() => ({
                 errormessage: "maximum limit exceeded"
             }));
@@ -147,6 +152,7 @@ export default class AddPrefernces extends React.Component {
         if (floors.length !== 0) {
             return (
                 <select
+                    className="floor"
                     name="floors"
                     onChange={this.handleChange}
                     defaultValue={floors[0]}
@@ -166,22 +172,26 @@ export default class AddPrefernces extends React.Component {
     showRooms = () => {
         if (this.state.rooms.length > 0) {
             return (
-                <Select
-                    name="roomNo"
-                    onChange={this.changeSelect}
-                    value={this.state.value}
-                    placeholder="Select Room"
-                    options={this.state.rooms.map(room => ({
-                        value: room,
-                        label: room
-                    }))}
-                />
+                <div className="room">
+                    {" "}
+                    <Select
+                        className="selectroom"
+                        name="roomNo"
+                        onChange={this.changeSelect}
+                        value={this.state.value}
+                        placeholder="Select Room"
+                        options={this.state.rooms.map(room => ({
+                            value: room,
+                            label: room
+                        }))}
+                    />
+                </div>
             );
         }
     };
 
     showMessage = () => {
-        let msg = "your preference list";
+        let msg = "Preference-wise rooms list:";
         if (this.props.User.disabled && this.state.disabledQuota) {
             if (this.state.disabledPreferences.length === 0)
                 msg = "your preference list is empty";
@@ -189,7 +199,7 @@ export default class AddPrefernces extends React.Component {
             if (this.state.normalPreferences.length === 0)
                 msg = "your preference list is empty";
         }
-        return <p>{msg}</p>;
+        return <p className="msg">{msg}</p>;
     };
 
     showOptions = () => {
@@ -214,36 +224,88 @@ export default class AddPrefernces extends React.Component {
     render() {
         return (
             <div>
-                <p>Round - {this.props.User.round}</p>
-                <div>
-                    <h2>select your preferences</h2>
-                    <hr />
-                </div>
-                <form onSubmit={this.handleAddRoom}>
-                    {this.props.User.disabled && (
-                        <div>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="disabledQuota"
-                                    checked={this.state.disabledQuota}
-                                    onChange={this.changeHadicappedQuota}
-                                />
-                                Handicap Quota
-                            </label>
-                        </div>
-                    )}
-                    {this.showFloors()}
-                    {this.showRooms()}
-                    <input type="submit" name="submit" value="Add room" />
-                </form>
-                <button onClick={this.sendData}>Save&Submit</button>
-                {this.state.errormessage && (
-                    <p className="errorshow">{this.state.errormessage}</p>
-                )}
+                <h1 className="heading111">Select your preferences</h1>
+                <h3>Current Round : {this.props.User.round}</h3>
 
-                {this.showMessage()}
-                <span>{this.showOptions()}</span>
+                <div className="overflowcontrol">
+                    <div className="preferenceflex">
+                        <form
+                            className="addroomform"
+                            onSubmit={this.handleAddRoom}
+                        >
+                            {this.props.User.disabled && (
+                                <p>
+                                    <label>
+                                        <input
+                                            className="checksize"
+                                            type="checkbox"
+                                            name="disabledQuota"
+                                            checked={this.state.disabledQuota}
+                                            onChange={
+                                                this.changeHadicappedQuota
+                                            }
+                                        />
+                                        Select Under Handicapped Division only?
+                                    </label>
+                                </p>
+                            )}
+                            <div className="selectlimit">
+                                {" "}
+                                <p>
+                                    {" "}
+                                    Select floor No. :{" "}
+                                    <p>{this.showFloors()}</p>
+                                </p>
+                                <p>Select Room No. : {this.showRooms()}</p>
+                                <input
+                                    className="addroom"
+                                    type="submit"
+                                    name="submit"
+                                    value="Add room"
+                                />
+                            </div>
+                        </form>
+                        <div className="preferencelist">
+                            {this.state.errormessage && (
+                                <p className="errorshow">
+                                    {this.state.errormessage}
+                                </p>
+                            )}
+                            {this.showMessage()}
+                            <span>{this.showOptions()}</span>
+                        </div>
+                    </div>
+                    <div>
+                        {
+                            <h4 className="underlined">
+                                {" "}
+                                Fill the reference details
+                            </h4>
+                        }
+                        {/*create a new form for referral and referee*/}
+                        <form onSubmit={this.sendAllValue}>
+                            <input
+                                type="text"
+                                placeholder="referral"
+                                name="referral"
+                            />
+                            <input
+                                type="text"
+                                placeholder="referee"
+                                name="referee"
+                            />
+                            <p>
+                                {" "}
+                                <input
+                                    className="preferencesubmit"
+                                    type="submit"
+                                    name="Sumit"
+                                    value="Submit"
+                                />
+                            </p>
+                        </form>
+                    </div>
+                </div>
             </div>
         );
     }

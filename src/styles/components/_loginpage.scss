@@ -20,3 +20,15 @@
   display: flex;
   justify-content: space-between;
 }
+.loginsubmit {
+  margin-top: 10px;
+  padding: 10px 40px 10px 40px;
+  border: none;
+  background-color: rgb(40, 107, 1);
+  box-shadow: 0px 0px 10px #3db108 inset;
+  color: White;
+}
+.loginsubmit:active {
+  background-color: rgb(63, 163, 5);
+  box-shadow: 0px 0px 10px #7df147 inset;
+}

@@ -1,32 +1,32 @@
 import React from "react";
-import ChangePassword from "./Userpage_comp/ChangePassword";
-import AllotmentResult from "./Userpage_comp/AllotmentResult";
-import AddPreferences from "./Userpage_comp/AddPreferences";
+import UserInfo from "./UserPage/UserInfo";
+import AddPreferences from "./UserPage/AddPreferences";
+import AllotmentResult from "./UserPage/AllotmentResult";
 
 class Userpage extends React.Component {
     state = {
-        changePassword: false,
+        userInfo: true,
         addPreferences: false,
         allotmentResult: false
     };
 
-    passwordChange = () => {
+    userInfo = () => {
         this.setState(() => ({
-            changePassword: true,
+            userInfo: true,
             addPreferences: false,
             allotmentResult: false
         }));
     };
-    current = () => {
+    addPreferences = () => {
         this.setState(() => ({
-            changePassword: false,
+            userInfo: false,
             addPreferences: true,
             allotmentResult: false
         }));
     };
-    upcoming = () => {
+    allotmentResult = () => {
         this.setState(() => ({
-            changePassword: false,
+            userInfo: false,
             addPreferences: false,
             allotmentResult: true
         }));
@@ -39,13 +39,11 @@ class Userpage extends React.Component {
                 <div className="flex-container1">
                     <button
                         className={
-                            this.state.changePassword
-                                ? "buttonactive"
-                                : "flexdiv"
+                            this.state.userInfo ? "buttonactive" : "flexdiv"
                         }
-                        onClick={this.passwordChange}
+                        onClick={this.userInfo}
                     >
-                        Change Password
+                        User Info
                     </button>
                     <button
                         className={
@@ -53,7 +51,7 @@ class Userpage extends React.Component {
                                 ? "buttonactive"
                                 : "flexdiv"
                         }
-                        onClick={this.current}
+                        onClick={this.addPreferences}
                         disabled={!this.props.User.editable}
                     >
                         Add Preferences
@@ -64,17 +62,22 @@ class Userpage extends React.Component {
                                 ? "buttonactive"
                                 : "flexdiv"
                         }
-                        onClick={this.upcoming}
+                        onClick={this.allotmentResult}
                     >
-                        See Allotment Result
+                        Allotment Results
                     </button>
                 </div>
-                <div className="admindiv">
-                    {(this.state.changePassword && <ChangePassword />) ||
-                        (this.state.addPreferences && (
-                            <AddPreferences User={this.props.User} />
+                <div className="flex2">
+                    <h1 className="allheadings">User Workspace</h1>
+                    <div className="admindiv">
+                        {(this.state.userInfo && (
+                            <UserInfo User={this.props.User} />
                         )) ||
-                        (this.state.allotmentResult && <AllotmentResult />)}
+                            (this.state.addPreferences && (
+                                <AddPreferences User={this.props.User} />
+                            )) ||
+                            (this.state.allotmentResult && <AllotmentResult />)}
+                    </div>
                 </div>
             </div>
         );

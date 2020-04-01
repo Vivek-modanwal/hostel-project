@@ -1,0 +1,97 @@
+//user info
+.userinfoflex {
+  display: flex;
+  flex-direction: column;
+}
+.userinfoflex2 {
+  padding: 10px;
+  color: rgb(230, 227, 227);
+  background-color: #b1b1b1;
+  border: none;
+}
+.userinfoflex3 {
+  padding: 10px;
+  color: rgb(0, 0, 0);
+  background-color: #53b6dd;
+  box-shadow: 0px 0px 10px #9ee5ee inset;
+}
+.spacing {
+  margin-bottom: 160px;
+}
+.formdiv {
+  max-width: 360px;
+}
+.float {
+  float: right;
+}
+.submitbuttonspace {
+  // background-color: #adadad;
+  background-image: url("./arrow_up.png");
+  padding: 5px 12px 5px 12px;
+  margin-right: 100px;
+}
+//add preferences
+.addroom {
+  padding: 6px 16px 6px 16px;
+  background-color: #bebebe;
+}
+.preferencesubmit {
+  padding: 6px 16px 6px 16px;
+  background-color: #adadad;
+}
+.checksize {
+  padding: 5px;
+}
+.selectlimit {
+  width: 300px;
+}
+.preferenceflex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.preferencelist {
+  padding: 20px;
+  margin-right: 50px;
+
+  background-color: #81ccff;
+  box-shadow: 0px 0px 80px #4cb7ff inset;
+}
+.msg {
+  margin-top: 0px;
+  text-align: center;
+  text-decoration: underline;
+  font-size: larger;
+  font-style: bold;
+}
+.addroomform {
+  overflow-y: auto;
+  max-height: 250px;
+  padding: 10px;
+  border: 2px solid #d8d8d8;
+  border-radius: 3px;
+  margin-bottom: 30px;
+}
+.underlined {
+  text-decoration: wavy;
+}
+.floor {
+  padding: 3px 6px 3px 6px;
+  width: 160px;
+}
+.selectroom {
+  width: auto;
+}
+.listname {
+  margin-right: 10px;
+  text-align: center;
+  padding: 3px;
+}
+.roomoptions {
+  background: linear-gradient(to right, #2b9fec, #3696d6a1);
+  margin-bottom: 3px;
+  padding: 5px;
+}
+.movebutton {
+  font-size: small;
+}

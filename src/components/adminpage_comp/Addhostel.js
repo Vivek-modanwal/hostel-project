@@ -12,9 +12,39 @@ class Addhostel extends React.Component {
         roomRange: "",
         disabledRoomRange: "",
         wrapAround: true,
-        uploaded: false
+        uploaded: false,
+        saved: false,
+        newUser: true
     };
-
+    componentDidMount = () => {
+        if (this.props.existing) {
+            this.setState(() => ({
+                hostelName: this.props.existing.name,
+                roomCapacity: this.props.existing.capacity,
+                roomRange: this.props.existing.roomRange,
+                disabledRoomRange: this.props.existing.disabledRoomRange,
+                wrapAround: this.props.existing.wrapAround,
+                uploaded: this.props.existing.uploaded,
+                saved: true,
+                id: this.props.existing._id,
+                newUser: false
+            }));
+        }
+    };
+    componentWillReceiveProps = () => {
+        if (!this.state.newUser) {
+            this.setState(() => ({
+                hostelName: "",
+                roomCapacity: "1",
+                roomRange: "",
+                disabledRoomRange: "",
+                wrapAround: true,
+                uploaded: false,
+                saved: false,
+                newUser: true
+            }));
+        }
+    };
     nextStep = () => {
         const { step } = this.state;
         this.setState({
@@ -27,8 +57,8 @@ class Addhostel extends React.Component {
             step: step - 1
         });
     };
-
     handleChange = hostelData => {
+        hostelData.saved = true;
         this.setState(() => hostelData);
     };
 
@@ -44,6 +74,7 @@ class Addhostel extends React.Component {
                         nextStep={this.nextStep}
                         handleChange={this.handleChange}
                         values={this.state}
+                        existing={!!this.props.existing}
                     />
                 );
             case 2:
@@ -53,6 +84,7 @@ class Addhostel extends React.Component {
                         prevStep={this.prevStep}
                         upload={this.uploaded}
                         uploaded={this.state.uploaded}
+                        id={this.state.id}
                     />
                 );
             case 3:
@@ -60,10 +92,10 @@ class Addhostel extends React.Component {
                     <Page3
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
-                        values={this.state}
+                        id={this.state.id}
                     />
                 );
-            case 4:
+            default:
                 return <Page4 />;
         }
     }

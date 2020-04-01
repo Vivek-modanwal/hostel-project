@@ -1,93 +1,135 @@
 import React from "react";
+import axios from "axios";
 import Modal from "react-modal";
 
 class Currenthostel extends React.Component {
-  state = {
-    options: ["hostel-1", "hostel-2", "hostel-3"],
-    selectedOption: undefined,
-    notRemove: false
-  };
-  handleDeleteOption = (optionToRemove) => {
-    if ({ optionToRemove }) {
-      this.setState((prevState) => ({
-        options: prevState.options.filter(
-          (option) => optionToRemove !== option
-        ),
-        selectedOption: undefined
-      }));
-    } else {
-      this.setState(() => ({ selectedOption: undefined }));
-    }
-  };
-  handleselected = (optionToRemove) => {
-    this.setState(() => ({ selectedOption: optionToRemove }));
-  };
-  render() {
-    return (
-      <div>
-        <h1 className="heading111">Current added hostels </h1>
-        <p>
-          Here you can delete, modify and schedule allotments for current
-          hostels
-        </p>
-        <div className="overflowcontrol">
-          {this.state.options.length === 0 && (
-            <p className="errorshow">! No Hostels added yet</p>
-          )}
+    state = {
+        hostels: [],
+        selectedOptionName: undefined,
+        selectedOptionId: undefined
+    };
 
-          <div className="divcurrenthostels">
-            {this.state.options.map((option, index) => (
-              <div key={option}>
-                <div className="currenthostels">
-                  <div>
-                    {index + 1}. {option}
-                  </div>
-                  <div>
-                    <button className="removebutton">Edit</button>
-                    <button
-                      className="removebutton"
-                      onClick={(e) => {
-                        this.handleselected(option);
-                      }}
+    componentDidMount = async () => {
+        //load all the hostels of admin
+        //and store it to state
+        try {
+            const Hostels = await axios.get(
+                "http://localhost:5000/admin/hostels"
+            );
+            this.setState(() => ({ hostels: Hostels.data }));
+        } catch (e) {}
+    };
+
+    handleSelected = (name, id) => {
+        this.setState(() => ({
+            selectedOptionName: name,
+            selectedOptionId: id
+        }));
+    };
+
+    handleRemove = async e => {
+        try {
+            if (e.target.id === "yes") {
+                // sending delete request to
+                await axios.delete(
+                    `http://localhost:5000/admin/${this.state.selectedOptionId}`
+                );
+
+                this.setState(prevState => ({
+                    hostels: prevState.hostels.filter(
+                        hostel => hostel._id !== this.state.selectedOptionId
+                    )
+                }));
+            }
+            this.setState(() => ({
+                selectedOptionName: undefined,
+                selectedOptionId: undefined
+            }));
+        } catch (er) {}
+    };
+
+    handleEdit = e => {
+        const hostelDetail = this.state.hostels.find(
+            hostel => hostel._id === e.target.id
+        );
+        this.props.edithostel(hostelDetail);
+    };
+    render() {
+        return (
+            <div>
+                <h1 className="heading111">Current added hostels </h1>
+                <p>
+                    Here you can delete, modify and schedule allotments for
+                    current hostels
+                </p>
+                <div className="overflowcontrol">
+                    {this.state.hostels.length === 0 && (
+                        <p className="errorshow">! No Hostels added yet</p>
+                    )}
+
+                    <div className="divcurrenthostels">
+                        {this.state.hostels.map((hostel, index) => (
+                            <div key={index}>
+                                <div className="currenthostels">
+                                    <div>
+                                        {index + 1}. {hostel.name}
+                                    </div>
+                                    <div>
+                                        <button
+                                            className="removebutton"
+                                            id={hostel._id}
+                                            onClick={this.handleEdit}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="removebutton"
+                                            onClick={e =>
+                                                this.handleSelected(
+                                                    hostel.name,
+                                                    hostel._id
+                                                )
+                                            }
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <Modal
+                        ariaHideApp={false}
+                        isOpen={!!this.state.selectedOptionId}
+                        contentLabel="selected"
+                        className="modal"
                     >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <Modal
-            ariaHideApp={false}
-            isOpen={!!this.state.selectedOption}
-            contentLabel="selected"
-            className="modal"
-          >
-            <h4>Are you sure to remove {this.state.selectedOption}</h4>
+                        <h4>
+                            Are you sure to remove{" "}
+                            {this.state.selectedOptionName}
+                        </h4>
 
-            <div className="yesno-space">
-              <button
-                className="modalbutton"
-                onClick={(e) => {
-                  this.handleDeleteOption(this.state.selectedOption);
-                }}
-              >
-                Yes
-              </button>
-              <button
-                className="modalbutton"
-                onClick={(e) => {
-                  this.handleDeleteOption(this.state.notRemove);
-                }}
-              >
-                No
-              </button>
+                        <div className="yesno-space">
+                            <button
+                                className="modalbutton"
+                                id="yes"
+                                onClick={this.handleRemove}
+                            >
+                                Yes
+                            </button>
+                            <button
+                                className="modalbutton"
+                                id="no"
+                                onClick={this.handleRemove}
+                            >
+                                No
+                            </button>
+                        </div>
+                    </Modal>
+                </div>
             </div>
-          </Modal>
-        </div>
-      </div>
-    );
-  }
+        );
+    }
 }
 
 export default Currenthostel;

@@ -1,5 +1,6 @@
 // csv upload
 import React from "react";
+import axios from "axios";
 import validateCSV from "./csvFileValidation";
 
 class Page2 extends React.Component {
@@ -8,6 +9,7 @@ class Page2 extends React.Component {
     };
     handleupload = async e => {
         e.preventDefault();
+        if (!e.target.elements.csvData.files[0]) return;
         const csvData = await validateCSV(e.target.elements.csvData.files[0]);
         console.log(csvData.data);
         console.log(csvData.inValidMessages);
@@ -16,8 +18,10 @@ class Page2 extends React.Component {
                 throw new Error();
             }
             this.setState(() => ({ inValidMessages: [] }));
-
-            //upload this data to server via axios
+            console.log(this.props.id);
+            await axios.post(
+                `http://localhost:5000/admin/${this.props.id}/upload`
+            );
 
             this.props.upload();
         } catch (e) {
@@ -26,6 +30,7 @@ class Page2 extends React.Component {
                     inValidMessages: csvData.inValidMessages
                 }));
             }
+            //handel error from server if any
         }
     };
     render() {
@@ -57,7 +62,7 @@ class Page2 extends React.Component {
                     disabled={!this.props.uploaded}
                     onClick={this.props.nextStep}
                 >
-                    Save and Next
+                    Next
                 </button>
             </div>
         );

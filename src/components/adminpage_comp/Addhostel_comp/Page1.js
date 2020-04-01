@@ -1,13 +1,14 @@
 //  hostel details....
 import React from "react";
 import validateRange from "./errorCheck";
+import axios from "axios";
 
 class Page1 extends React.Component {
     state = {
         errormessage: ""
     };
 
-    saveAndContinue = e => {
+    saveAndContinue = async e => {
         e.preventDefault();
         const elements = e.target.elements;
         const hostelData = {};
@@ -26,20 +27,44 @@ class Page1 extends React.Component {
                 );
             }
 
-            // call axios for adding the hostel to database
+            if (this.props.values.saved) {
+                //call axios to update data of existing hostel
+                console.log("I am from existing");
+                await axios.patch(
+                    `http://localhost:5000/admin/${this.props.values.id}`,
+                    hostelData
+                );
+            } else {
+                //call axios to add the data of new hostel
+                console.log("I am from new");
+                const data = await axios.post(
+                    "http://localhost:5000/admin/hostel",
+                    hostelData
+                );
+                hostelData.id = data.data._id;
+            }
 
             this.props.handleChange(hostelData);
             this.props.nextStep();
             this.setState(() => ({ errormessage: "" }));
         } catch (e) {
-            this.setState(() => ({ errormessage: e.message }));
+            if (e.message) {
+                // if client side validation failed
+                this.setState(() => ({ errormessage: e.message }));
+            } else if (e.response) {
+                // if server side validation failed
+            }
         }
     };
 
     render() {
         return (
             <div>
-                <h1 className="heading111">Add New Hostel</h1>
+                {this.props.existing ? (
+                    <h1 className="heading111">Update Hostel Details</h1>
+                ) : (
+                    <h1 className="heading111">Add New Hostel</h1>
+                )}
                 {this.state.errormessage && (
                     <p className="errorshow">{this.state.errormessage}</p>
                 )}

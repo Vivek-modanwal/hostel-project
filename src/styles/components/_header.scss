@@ -20,6 +20,9 @@
   color: #141413;
 }
 .nav0 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background-color: #013d3a;
   padding: 8px;
   box-shadow: 0px -2px 15px #002731;
@@ -28,14 +31,14 @@
 .nav1 {
   background-color: #dad5d5;
 
-  color: #000000;
+  color: #7e7e7e;
   padding: 8px;
   padding-left: 20px;
   padding-right: 20px;
   border-right: 4px solid #013d3a;
   text-decoration: none;
 
-  text-shadow: 0px 0px 2px #000000e1;
+  text-shadow: 0px 0px 2px #5a5a5ae1;
   box-shadow: 0px 0px 6px #000000 inset;
 }
 #0e0d0d #202020 #3d3c3c .nav1:hover {
@@ -47,4 +50,20 @@
   color: white;
 
   box-shadow: 0px 0px 8px #029783 inset;
+}
+//logout button
+.logouton {
+  background-color: #ee0505;
+  color: white;
+
+  border: none;
+}
+.logoutoff {
+  margin: 0px;
+  padding: 6px 8px 2px 8px;
+
+  background-color: #ee0505;
+  color: white;
+
+  border: none;
 }

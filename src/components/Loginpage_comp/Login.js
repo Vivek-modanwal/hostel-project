@@ -74,7 +74,7 @@ class Login extends React.Component {
           <p>
             <input type="password" name="password" required={true} />
           </p>
-          <input type="submit" value="Submit" />
+          <input className="loginsubmit" type="submit" value="Submit" />
           <div className="separate.signup_forget">
             <div>
               {" "}

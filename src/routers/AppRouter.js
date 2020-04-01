@@ -26,10 +26,13 @@ class AppRouter extends React.Component {
       User: data.User
     }));
   };
+
   getComponent = (Component) => {
-    if (this.state.isAdmin) return <Redirect to="/admin" />;
-    else if (this.state.isUser) return <Redirect to="/user" />;
-    else return <Component authenticated={this.authenticated} />;
+    if (this.state.isAdmin) {
+      return <Redirect to="/admin" />;
+    } else if (this.state.isUser) {
+      return <Redirect to="/user" />;
+    } else return <Component authenticated={this.authenticated} />;
   };
 
   render() {
@@ -37,6 +40,7 @@ class AppRouter extends React.Component {
       <BrowserRouter>
         <div className="basicflex">
           <Header />
+
           <div>
             <Switch>
               <Route path="/" component={Homepage} exact={true} />
@@ -56,7 +60,7 @@ class AppRouter extends React.Component {
                 </Route>
               )}
               {/* temporary */}
-              <Route path="/usercheck" component={Userpage} />
+
               <Route path="/admincheck" component={Adminpage} />
               <Route component={NotFoundPage} />
             </Switch>
