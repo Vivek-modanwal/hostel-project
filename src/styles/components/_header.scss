@@ -1,69 +1,82 @@
 .header0 {
-  background: linear-gradient(to right, #03b4b4, #28a7a0);
-  box-shadow: 0px 0px 40px #88f1f8 inset;
+    background: linear-gradient(to right, #03b4b4, #28a7a0);
+    box-shadow: 0px 0px 40px #88f1f8 inset;
 }
 .header01 {
-  font-size: xx-large;
-  padding-top: 20px;
-  padding-left: 20px;
-  margin: 0px;
-  font-family: "Arial Narrow Bold", sans-serif;
-  text-shadow: 5px 3px 4px #000000;
-  color: #fafafa;
+    font-size: xx-large;
+    padding-top: 20px;
+    padding-left: 20px;
+    margin: 0px;
+    font-family: "Arial Narrow Bold", sans-serif;
+    text-shadow: 5px 3px 4px #000000;
+    color: #fafafa;
 }
 
 .header1 {
-  padding-left: 20px;
-  font-size: 15px;
-  font-style: italic;
-  text-shadow: 0px 0px 2px #686908e1;
-  color: #141413;
+    padding-left: 20px;
+    font-size: 15px;
+    font-style: italic;
+    text-shadow: 0px 0px 2px #686908e1;
+    color: #141413;
 }
 .nav0 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #013d3a;
-  padding: 8px;
-  box-shadow: 0px -2px 15px #002731;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #013d3a;
+    padding: 8px;
+    box-shadow: 0px -2px 15px #002731;
 }
 
 .nav1 {
-  background-color: #dad5d5;
+    background-color: #dad5d5;
 
-  color: #7e7e7e;
-  padding: 8px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-right: 4px solid #013d3a;
-  text-decoration: none;
+    color: #7e7e7e;
+    padding: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-right: 4px solid #013d3a;
+    text-decoration: none;
 
-  text-shadow: 0px 0px 2px #5a5a5ae1;
-  box-shadow: 0px 0px 6px #000000 inset;
+    text-shadow: 0px 0px 2px #5a5a5ae1;
+    box-shadow: 0px 0px 6px #000000 inset;
 }
 #0e0d0d #202020 #3d3c3c .nav1:hover {
-  background-color: #9b9b9b;
+    background-color: #9b9b9b;
 }
 
 .nav2 {
-  background-color: #001b1a;
-  color: white;
+    background-color: #001b1a;
+    color: white;
 
-  box-shadow: 0px 0px 8px #029783 inset;
+    box-shadow: 0px 0px 8px #029783 inset;
 }
 //logout button
-.logouton {
-  background-color: #ee0505;
-  color: white;
+.logout {
+    background-color: #ee0505;
 
-  border: none;
+    color: white;
+    padding: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-right: 4px solid #013d3a;
+    text-decoration: none;
+    align-items: right;
+    text-shadow: 0px 0px 2px #5a5a5ae1;
+    box-shadow: 0px 0px 6px #000000 inset;
+}
+.logouton {
+    background-color: #ee0505;
+    color: white;
+
+    border: none;
 }
 .logoutoff {
-  margin: 0px;
-  padding: 6px 8px 2px 8px;
+    margin: 0px;
+    padding: 6px 8px 2px 8px;
 
-  background-color: #ee0505;
-  color: white;
+    background-color: #ee0505;
+    color: white;
 
-  border: none;
+    border: none;
 }
