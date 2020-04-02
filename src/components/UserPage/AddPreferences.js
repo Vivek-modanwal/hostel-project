@@ -132,13 +132,28 @@ export default class AddPrefernces extends React.Component {
                 if (detail.prefix === floorNo) rooms = detail.rooms;
             });
         }
-        this.setState(() => ({ rooms: rooms, value: "" }));
+        this.setState(() => ({ rooms: rooms, value: "", floorNo: floorNo }));
     };
 
     changeHadicappedQuota = () => {
+        let rooms = [];
+        let floorNo;
+        if (!this.state.disabledQuota) {
+            if (this.state.disabledFloors.length > 0) {
+                rooms = this.props.User.disabledRooms[0].rooms;
+                floorNo = this.props.User.disabledRooms[0].prefix;
+            }
+        } else {
+            if (this.state.normalFloors.length > 0) {
+                rooms = this.props.User.vacantRooms[0].rooms;
+                floorNo = this.props.User.vacantRooms[0].prefix;
+            }
+        }
         this.setState(prevState => ({
             disabledQuota: !prevState.disabledQuota,
-            value: ""
+            rooms: rooms,
+            value: "",
+            floorNo: floorNo
         }));
     };
 
@@ -149,13 +164,14 @@ export default class AddPrefernces extends React.Component {
         } else {
             floors = this.state.normalFloors;
         }
+        console.log(floors);
         if (floors.length !== 0) {
             return (
                 <select
                     className="floor"
                     name="floors"
                     onChange={this.handleChange}
-                    defaultValue={floors[0]}
+                    value={this.state.floorNo ? this.state.floorNo : floors[0]}
                 >
                     {floors.map(floor => (
                         <option key={floor} value={floor}>
