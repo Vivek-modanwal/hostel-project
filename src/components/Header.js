@@ -1,13 +1,10 @@
 import React from "react";
-import { NavLink, Redirect } from "react-router-dom";
-import Success from "./adminpage_comp/Addhostel_comp/Page4";
+import { NavLink } from "react-router-dom";
 
 class Header extends React.Component {
     render() {
         return (
             <div className="header0">
-                {/* temporary */}
-                <NavLink to="/admincheck">admin-check</NavLink>{" "}
                 <div>
                     <p className="header01">
                         Welcome To Hostel Rooms Allocation App. ...

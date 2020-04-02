@@ -35,6 +35,7 @@ class AppRouter extends React.Component {
         } else return <Component authenticated={this.authenticated} />;
     };
     logout = () => {
+        // axios call to logut from server
         this.setState(() => ({
             isAdmin: false,
             isUser: false
@@ -50,7 +51,6 @@ class AppRouter extends React.Component {
                         admin={this.state.isAdmin}
                         user={this.state.isUser}
                     />
-
                     <div>
                         <Switch>
                             <Route path="/" component={Homepage} exact={true} />
@@ -76,9 +76,6 @@ class AppRouter extends React.Component {
                                     <Adminpage User={this.state.User} />
                                 </Route>
                             )}
-                            {/* temporary */}
-
-                            <Route path="/admincheck" component={Adminpage} />
                             <Route component={NotFoundPage} />
                         </Switch>
                     </div>
