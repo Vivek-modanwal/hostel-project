@@ -3,6 +3,7 @@ import Addhostel from "./adminpage_comp/Addhostel";
 import Currenthostel from "./adminpage_comp/Currenthostel";
 import Upcomingevents from "./adminpage_comp/Upcominghostel";
 import AdminInfo from "./adminpage_comp/AdminInfo";
+import ShowUsers from "./showUsers/ShowUsers";
 
 class Adminpage extends React.Component {
     state = {
@@ -10,7 +11,8 @@ class Adminpage extends React.Component {
         addhostel: false,
         currenthostel: false,
         upcominghostel: false,
-        edithostel: false
+        edithostel: false,
+        showUsers: false,
     };
     admininfo = () => {
         this.setState(() => ({
@@ -18,7 +20,8 @@ class Adminpage extends React.Component {
             addhostel: false,
             currenthostel: false,
             upcominghostel: false,
-            edithostel: false
+            edithostel: false,
+            showUsers: false,
         }));
     };
     add = () => {
@@ -27,7 +30,9 @@ class Adminpage extends React.Component {
             addhostel: true,
             currenthostel: false,
             upcominghostel: false,
-            edithostel: false
+            edithostel: false,
+            showUsers: false,
+            hostelDetail: null,
         }));
     };
     current = () => {
@@ -36,7 +41,8 @@ class Adminpage extends React.Component {
             addhostel: false,
             currenthostel: true,
             upcominghostel: false,
-            edithostel: false
+            edithostel: false,
+            showUsers: false,
         }));
     };
     upcoming = () => {
@@ -45,17 +51,41 @@ class Adminpage extends React.Component {
             addhostel: false,
             currenthostel: false,
             upcominghostel: true,
-            edithostel: false
+            edithostel: false,
+            showUsers: false,
         }));
     };
-    edithostel = hostelDetail => {
+    edithostel = (hostelDetail) => {
+        //console.log("from edithostel function");
         this.setState(() => ({
             admininfo: false,
             addhostel: false,
             currenthostel: true,
             upcominghostel: false,
             edithostel: true,
-            hostelDetail: hostelDetail
+            showUsers: false,
+            hostelDetail: hostelDetail,
+        }));
+    };
+    showUsers = (hostelDetail) => {
+        this.setState(() => ({
+            admininfo: false,
+            addhostel: false,
+            currenthostel: true,
+            upcominghostel: false,
+            edithostel: false,
+            showUsers: true,
+            hostelDetail: hostelDetail,
+        }));
+    };
+    closeUsers = () => {
+        this.setState(() => ({
+            admininfo: false,
+            addhostel: false,
+            currenthostel: true,
+            upcominghostel: false,
+            edithostel: false,
+            showUsers: false,
         }));
     };
     render() {
@@ -106,17 +136,26 @@ class Adminpage extends React.Component {
                     </div>
                     <div className="flex2">
                         <h1 className="allheadings">Admin Workspace</h1>
-                        <div className="admindiv">
-                            {(this.state.edithostel && (
-                                <Addhostel existing={this.state.hostelDetail} />
+                        <div className={this.state.showUsers ? "" : "admindiv"}>
+                            {(this.state.showUsers && (
+                                <ShowUsers
+                                    hostel={this.state.hostelDetail}
+                                    closeUsers={this.closeUsers}
+                                />
                             )) ||
+                                ((this.state.edithostel ||
+                                    this.state.addhostel) && (
+                                    <Addhostel
+                                        existing={this.state.hostelDetail}
+                                    />
+                                )) ||
                                 (this.state.admininfo && (
                                     <AdminInfo User={this.props.User} />
                                 )) ||
-                                (this.state.addhostel && <Addhostel />) ||
                                 (this.state.currenthostel && (
                                     <Currenthostel
                                         edithostel={this.edithostel}
+                                        showUsers={this.showUsers}
                                     />
                                 )) ||
                                 (this.state.upcominghostel && (

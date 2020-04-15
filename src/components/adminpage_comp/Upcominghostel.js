@@ -6,28 +6,41 @@ class Upcomingevents extends React.Component {
     state = {
         hostels: [],
         selectedOptionId: undefined,
-        selectedOptionName: undefined
+        selectedOptionName: undefined,
     };
     componentDidMount = async () => {
         try {
-            const data = await axios.get(
-                "http://localhost:5000/admin/hostels?final=true"
-            );
+            const url = "http://localhost:5000/admin/hostels?final=true";
+            const config = {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem("userData"))
+                        .token,
+                },
+            };
+
+            const data = await axios.get(url, config);
+
             this.setState(() => ({ hostels: data.data }));
         } catch (e) {
             // handle error if something went wrong
         }
     };
-    handleDeleteOption = async e => {
+    handleDeleteOption = async (e) => {
         try {
             if (e.target.id === "yes") {
-                await axios.get(
-                    `http://localhost:5000/admin/${this.state.selectedOptionId}/discard`
-                );
-                this.setState(prevState => ({
+                const url = `http://localhost:5000/admin/${this.state.selectedOptionId}/discard`;
+                const config = {
+                    headers: {
+                        Authorization: JSON.parse(
+                            localStorage.getItem("userData")
+                        ).token,
+                    },
+                };
+                await axios.get(url, config);
+                this.setState((prevState) => ({
                     hostels: prevState.hostels.filter(
-                        hostel => hostel._id !== this.state.selectedOptionId
-                    )
+                        (hostel) => hostel._id !== this.state.selectedOptionId
+                    ),
                 }));
             }
         } catch (e) {
@@ -35,18 +48,27 @@ class Upcomingevents extends React.Component {
         }
         this.setState(() => ({
             selectedOptionId: undefined,
-            selectedOptionName: undefined
+            selectedOptionName: undefined,
         }));
     };
     handleSelected = (name, id) => {
         this.setState(() => ({
             selectedOptionId: id,
-            selectedOptionName: name
+            selectedOptionName: name,
         }));
     };
-    getDate = date => {
+    getDate = (date) => {
         const d = new Date(date);
         return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    };
+    todaysDate = (given) => {
+        const temp = new Date();
+        const curr = new Date(
+            temp.getFullYear(),
+            temp.getMonth(),
+            temp.getDate()
+        ).getTime();
+        return given === curr;
     };
     render() {
         return (
@@ -74,7 +96,10 @@ class Upcomingevents extends React.Component {
                                     <div>
                                         <button
                                             className="removebutton"
-                                            onClick={e => {
+                                            disabled={this.todaysDate(
+                                                hostel.Date
+                                            )}
+                                            onClick={(e) => {
                                                 this.handleSelected(
                                                     hostel.name,
                                                     hostel._id

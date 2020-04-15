@@ -1,0 +1,39 @@
+.spWrapper {
+    padding: 20px;
+    text-align: center;
+    background-color: #d5d1ca78;
+}
+.spsortBy {
+    width: 110px;
+}
+.sporder {
+    width: 120px;
+}
+.spsearch {
+    width: 150px;
+}
+.spsubmit {
+    height: 35px;
+    width: 70px;
+    padding: 5px;
+    margin-left: 10px;
+    border: none;
+    color: white;
+    background-color: rgb(54, 79, 221);
+}
+.spbox {
+    height: 35px;
+    border: 1px solid black;
+    background-color: white;
+    padding-left: 10px;
+}
+.spout {
+    margin-left: 15px;
+}
+
+.spsubmit:enabled:hover {
+    color: black;
+}
+.spsubmit:disabled {
+    opacity: 0.5;
+}

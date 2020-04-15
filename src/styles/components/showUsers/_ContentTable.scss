@@ -1,0 +1,25 @@
+#userTable {
+    border-collapse: collapse;
+    border: 1px solid black;
+    width: 100%;
+    margin: auto;
+}
+#userTable th {
+    padding-top: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid black;
+    background-color: #6597b4;
+    color: #080800;
+}
+#userTable .disabled {
+    background-color: #b1b1b18f;
+}
+#userTable .notDisabled {
+    background-color: #dad5d521;
+}
+#userTable td {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid black;
+}

@@ -3,9 +3,9 @@ import React from "react";
 import axios from "axios";
 class Page3 extends React.Component {
     state = {
-        errormessage: ""
+        errormessage: "",
     };
-    saveAndContinue = async e => {
+    saveAndContinue = async (e) => {
         e.preventDefault();
 
         //validating the date
@@ -28,24 +28,36 @@ class Page3 extends React.Component {
             }
 
             // send the date to backend using axios
-            await axios.post(
-                `http://localhost:5000/admin/${this.props.id}/finalSubmit`,
-                { Date: e.target.elements.date.value }
-            );
+            const url = `http://localhost:5000/admin/${this.props.id}/finalSubmit`;
+            const config = {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem("userData"))
+                        .token,
+                },
+            };
+            const data = { Date: e.target.elements.date.value };
+            await axios.post(url, data, config);
 
             this.setState(() => ({ errormessage: "" }));
             this.props.nextStep();
         } catch (e) {
-            if (e.message) {
-                this.setState(() => ({ errormessage: e.message }));
+            let msg = "";
+            if (e.message.toLowerCase() !== "network error") {
+                msg = e.message;
+            } else {
+                msg = "Please Try Again Later";
             }
-            //handle error from server if any
+            this.setState(() => ({ errormessage: msg }));
         }
     };
     render() {
         return (
             <div>
-                <h1 className="heading111">Add New Hostel</h1>
+                {this.props.newUser ? (
+                    <h1 className="heading111">Add New Hostel</h1>
+                ) : (
+                    <h1 className="heading111">Update Hostel Details</h1>
+                )}
                 <p>
                     Provide the Date for allotment and final submit for
                     processing.....

@@ -5,20 +5,12 @@ import Page3 from "./Addhostel_comp/Page3";
 import Page4 from "./Addhostel_comp/Page4";
 
 class Addhostel extends React.Component {
-    state = {
-        step: 1,
-        hostelName: "",
-        roomCapacity: "1",
-        roomRange: "",
-        disabledRoomRange: "",
-        wrapAround: true,
-        uploaded: false,
-        saved: false,
-        newUser: true
-    };
-    componentDidMount = () => {
+    UNSAFE_componentWillMount = () => {
+        //console.log("from componentDidMount");
         if (this.props.existing) {
+            //console.log(this.props.existing);
             this.setState(() => ({
+                step: 1,
                 hostelName: this.props.existing.name,
                 roomCapacity: this.props.existing.capacity,
                 roomRange: this.props.existing.roomRange,
@@ -27,13 +19,11 @@ class Addhostel extends React.Component {
                 uploaded: this.props.existing.uploaded,
                 saved: true,
                 id: this.props.existing._id,
-                newUser: false
+                newUser: false,
             }));
-        }
-    };
-    componentWillReceiveProps = () => {
-        if (!this.state.newUser) {
+        } else {
             this.setState(() => ({
+                step: 1,
                 hostelName: "",
                 roomCapacity: "1",
                 roomRange: "",
@@ -41,23 +31,42 @@ class Addhostel extends React.Component {
                 wrapAround: true,
                 uploaded: false,
                 saved: false,
-                newUser: true
+                newUser: true,
+                id: null,
+            }));
+        }
+    };
+    UNSAFE_componentWillReceiveProps = (props) => {
+        // console.log("from componentWillReceiveProps");
+        // console.log(props);
+        if (!props.existing) {
+            this.setState(() => ({
+                step: 1,
+                hostelName: "",
+                roomCapacity: "1",
+                roomRange: "",
+                disabledRoomRange: "",
+                wrapAround: true,
+                uploaded: false,
+                saved: false,
+                newUser: true,
+                id: null,
             }));
         }
     };
     nextStep = () => {
         const { step } = this.state;
         this.setState({
-            step: step + 1
+            step: step + 1,
         });
     };
     prevStep = () => {
         const { step } = this.state;
         this.setState({
-            step: step - 1
+            step: step - 1,
         });
     };
-    handleChange = hostelData => {
+    handleChange = (hostelData) => {
         hostelData.saved = true;
         this.setState(() => hostelData);
     };
@@ -74,7 +83,6 @@ class Addhostel extends React.Component {
                         nextStep={this.nextStep}
                         handleChange={this.handleChange}
                         values={this.state}
-                        existing={!!this.props.existing}
                     />
                 );
             case 2:
@@ -85,6 +93,7 @@ class Addhostel extends React.Component {
                         upload={this.uploaded}
                         uploaded={this.state.uploaded}
                         id={this.state.id}
+                        newUser={this.state.newUser}
                     />
                 );
             case 3:
@@ -93,6 +102,7 @@ class Addhostel extends React.Component {
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
                         id={this.state.id}
+                        newUser={this.state.newUser}
                     />
                 );
             default:

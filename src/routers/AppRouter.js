@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+//import {Get} from "../Axios"
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Homepage from "../components/Homepage";
 import Loginpage from "../components/Loginpage";
@@ -12,34 +14,71 @@ import Footer from "../components/Footer";
 import Passwordreset from "../components/Passwordresetpage";
 
 class AppRouter extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isAdmin: false,
-            isUser: false
-        };
-    }
-    authenticated = data => {
+    state = {
+        isAdmin: false,
+        isUser: false,
+    };
+
+    //this method is used to check whether the user is logged in or not
+    UNSAFE_componentWillMount = async () => {
+        if (localStorage.getItem("userData")) {
+            try {
+                const userData = JSON.parse(localStorage.getItem("userData"));
+                const url = `http://localhost:5000/${
+                    userData.admin ? "admin" : "user"
+                }`;
+                const config = { headers: { Authorization: userData.token } };
+                const data = await axios.get(url, config);
+                this.setState(() => ({
+                    User: data.data,
+                    isAdmin: userData.admin,
+                    isUser: !userData.admin,
+                }));
+            } catch (e) {
+                localStorage.removeItem("userData");
+            }
+        }
+    };
+
+    authenticated = (data) => {
+        const userData = {};
+        userData.token = data.token;
+        userData.admin = data.admin;
+        localStorage.setItem("userData", JSON.stringify(userData));
         this.setState(() => ({
             isAdmin: data.admin,
             isUser: !data.admin,
-            User: data.User
+            User: data.User,
         }));
     };
 
-    getComponent = Component => {
+    getComponent = (Component) => {
         if (this.state.isAdmin) {
             return <Redirect to="/admin" />;
         } else if (this.state.isUser) {
             return <Redirect to="/user" />;
         } else return <Component authenticated={this.authenticated} />;
     };
-    logout = () => {
-        // axios call to logut from server
-        this.setState(() => ({
-            isAdmin: false,
-            isUser: false
-        }));
+
+    logout = async () => {
+        //logging out from backend
+        try {
+            const token = JSON.parse(localStorage.getItem("userData")).token;
+            const url = `http://localhost:5000/${
+                this.state.isAdmin ? "admin" : "user"
+            }/logout`;
+
+            await axios.get(url, {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            });
+            localStorage.removeItem("userData");
+            this.setState(() => ({
+                isAdmin: false,
+                isUser: false,
+            }));
+        } catch (e) {}
     };
 
     render() {

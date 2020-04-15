@@ -5,10 +5,12 @@ import validateCSV from "./csvFileValidation";
 
 class Page2 extends React.Component {
     state = {
-        inValidMessages: []
+        inValidMessages: [],
+        error: "",
     };
-    handleupload = async e => {
+    handleupload = async (e) => {
         e.preventDefault();
+        e.persist();
         if (!e.target.elements.csvData.files[0]) return;
         const csvData = await validateCSV(e.target.elements.csvData.files[0]);
         console.log(csvData.data);
@@ -18,28 +20,54 @@ class Page2 extends React.Component {
                 throw new Error();
             }
             this.setState(() => ({ inValidMessages: [] }));
-            console.log(this.props.id);
-            await axios.post(
-                `http://localhost:5000/admin/${this.props.id}/upload`
-            );
+            //console.log(this.props.id);
 
+            //uploading the csv to server
+            const url = `http://localhost:5000/admin/${this.props.id}/upload`;
+            const config = {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem("userData"))
+                        .token,
+                    "Content-Type": "multipart/form-data",
+                },
+            };
+            const data = new FormData();
+            data.append("upload", e.target.elements.csvData.files[0]);
+            await axios.post(url, data, config);
             this.props.upload();
+            this.setState(() => ({ inValidMessages: [], error: "" }));
         } catch (e) {
+            let msg = [];
+            let er = "";
             if (csvData.inValidMessages.length > 0) {
-                this.setState(() => ({
-                    inValidMessages: csvData.inValidMessages
-                }));
+                msg = csvData.inValidMessages;
+            } else if (e.response) {
+                if (e.response.status >= 400 && e.response.status < 500) {
+                    er = "validation failed";
+                } else {
+                    er = "Please Try Again Later";
+                }
+            } else {
+                er = "Please Try Again Later";
             }
-            //handel error from server if any
+
+            this.setState(() => ({ inValidMessages: msg, error: er }));
         }
     };
     render() {
         return (
             <div>
-                <h1 className="heading111">Add New Hostel</h1>
+                {this.props.newUser ? (
+                    <h1 className="heading111">Add New Hostel</h1>
+                ) : (
+                    <h1 className="heading111">Update Hostel Details</h1>
+                )}
                 <div>
                     <h3 className="page2.1">Upload .csv file here...</h3>
                 </div>
+                {this.state.error && (
+                    <p className="errorshow">{this.state.error}</p>
+                )}
                 <p>
                     column headers must be same as provided <b>Userid</b>,
                     <b>Email</b>,<b>Name</b>,<b>Rank</b>,<b>Disable</b>

@@ -4,19 +4,38 @@ import validateRange from "./errorCheck";
 import axios from "axios";
 
 class Page1 extends React.Component {
-    state = {
-        errormessage: ""
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            hostelName: this.props.values.hostelName,
+            roomCapacity: this.props.values.roomCapacity,
+            roomRange: this.props.values.roomRange,
+            disabledRoomRange: this.props.values.disabledRoomRange,
+            wrapAround: this.props.values.wrapAround,
+            errormessage: "",
+        };
+    }
 
-    saveAndContinue = async e => {
+    UNSAFE_componentWillReceiveProps(props) {
+        this.setState(() => ({
+            hostelName: props.values.hostelName,
+            roomCapacity: props.values.roomCapacity,
+            roomRange: props.values.roomRange,
+            disabledRoomRange: props.values.disabledRoomRange,
+            wrapAround: props.values.wrapAround,
+            errormessage: "",
+        }));
+    }
+
+    saveAndContinue = async (e) => {
         e.preventDefault();
         const elements = e.target.elements;
         const hostelData = {};
-        hostelData.hostelName = elements.hostelName.value;
-        hostelData.roomCapacity = elements.roomCapacity.value;
-        hostelData.roomRange = elements.roomRange.value;
-        hostelData.disabledRoomRange = elements.disabledRoomRange.value;
-        hostelData.wrapAround = elements.wrapAround.checked;
+        hostelData.hostelName = elements.hostelName.value.trim();
+        hostelData.roomCapacity = parseInt(elements.roomCapacity.value);
+        hostelData.roomRange = elements.roomRange.value.trim();
+        hostelData.disabledRoomRange = elements.disabledRoomRange.value.trim();
+        hostelData.wrapAround = elements.wrapAround.value === "true";
 
         try {
             validateRange(hostelData.roomRange, "Room Range");
@@ -26,21 +45,36 @@ class Page1 extends React.Component {
                     "Room Range for physically disabled"
                 );
             }
+            const config = {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem("userData"))
+                        .token,
+                },
+            };
 
             if (this.props.values.saved) {
-                //call axios to update data of existing hostel
-                console.log("I am from existing");
-                await axios.patch(
-                    `http://localhost:5000/admin/${this.props.values.id}`,
-                    hostelData
-                );
+                const provided = this.props.values;
+                if (
+                    !(
+                        provided.hostelName === hostelData.hostelName &&
+                        provided.roomCapacity === hostelData.roomCapacity &&
+                        provided.roomRange === hostelData.roomRange &&
+                        provided.disabledRoomRange ===
+                            hostelData.disabledRoomRange &&
+                        provided.wrapAround === hostelData.wrapAround
+                    )
+                ) {
+                    //call axios to update data of existing hostel
+                    console.log("I am from existing");
+                    const url = `http://localhost:5000/admin/${this.props.values.id}`;
+                    await axios.patch(url, hostelData, config);
+                }
             } else {
                 //call axios to add the data of new hostel
                 console.log("I am from new");
-                const data = await axios.post(
-                    "http://localhost:5000/admin/hostel",
-                    hostelData
-                );
+                const url = "http://localhost:5000/admin/hostel";
+                const data = await axios.post(url, hostelData, config);
+
                 hostelData.id = data.data._id;
             }
 
@@ -48,22 +82,36 @@ class Page1 extends React.Component {
             this.props.nextStep();
             this.setState(() => ({ errormessage: "" }));
         } catch (e) {
-            if (e.message) {
-                // if client side validation failed
-                this.setState(() => ({ errormessage: e.message }));
-            } else if (e.response) {
-                // if server side validation failed
+            let msg = "";
+            if (e.response) {
+                const error = e.response;
+                if (error.status >= 400 && error.status < 500) {
+                    msg = "validation failed";
+                } else {
+                    msg = "Please Try Again Later";
+                }
+            } else {
+                msg =
+                    e.message.toLowerCase() === "network error"
+                        ? "Please Try Again Later"
+                        : e.message;
             }
+            this.setState(() => ({ errormessage: msg }));
         }
+    };
+    handleChange = (e) => {
+        const change = {};
+        change[e.target.name] = e.target.value;
+        this.setState(() => change);
     };
 
     render() {
         return (
             <div>
-                {this.props.existing ? (
-                    <h1 className="heading111">Update Hostel Details</h1>
-                ) : (
+                {this.props.values.newUser ? (
                     <h1 className="heading111">Add New Hostel</h1>
+                ) : (
+                    <h1 className="heading111">Update Hostel Details</h1>
                 )}
                 {this.state.errormessage && (
                     <p className="errorshow">{this.state.errormessage}</p>
@@ -75,13 +123,15 @@ class Page1 extends React.Component {
                         type="text"
                         name="hostelName"
                         placeholder="hostel name"
-                        defaultValue={this.props.values.hostelName}
+                        value={this.state.hostelName}
+                        onChange={this.handleChange}
                         required={true}
                     />
                     <p>Each room capacity</p>
                     <select
                         name="roomCapacity"
-                        defaultValue={this.props.values.roomCapacity}
+                        value={this.state.roomCapacity}
+                        onChange={this.handleChange}
                     >
                         <option value="1">1 person</option>
                         <option value="2">2 persons</option>
@@ -95,7 +145,8 @@ class Page1 extends React.Component {
                         type="text"
                         placeholder="rooms range"
                         name="roomRange"
-                        defaultValue={this.props.values.roomRange}
+                        value={this.state.roomRange}
+                        onChange={this.handleChange}
                         required={true}
                     />
                     <p>Rooms range for physically disabled</p>
@@ -103,22 +154,18 @@ class Page1 extends React.Component {
                         type="text"
                         placeholder="rooms range"
                         name="disabledRoomRange"
-                        defaultValue={this.props.values.disabledRoomRange}
+                        onChange={this.handleChange}
+                        value={this.state.disabledRoomRange}
                     />
-                    <div>
-                        <label>
-                            <p>
-                                <input
-                                    type="checkbox"
-                                    name="wrapAround"
-                                    defaultChecked={
-                                        this.props.values.wrapAround
-                                    }
-                                />
-                                Wrap Around
-                            </p>
-                        </label>
-                    </div>
+                    <p>Wrap Around</p>
+                    <select
+                        name="wrapAround"
+                        onChange={this.handleChange}
+                        value={this.state.wrapAround}
+                    >
+                        <option value={true}>Yes</option>
+                        <option value={false}>No</option>
+                    </select>
                     <p>
                         <input
                             type="submit"

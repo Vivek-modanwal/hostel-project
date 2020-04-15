@@ -6,16 +6,22 @@ class Currenthostel extends React.Component {
     state = {
         hostels: [],
         selectedOptionName: undefined,
-        selectedOptionId: undefined
+        selectedOptionId: undefined,
     };
 
     componentDidMount = async () => {
         //load all the hostels of admin
         //and store it to state
         try {
-            const Hostels = await axios.get(
-                "http://localhost:5000/admin/hostels"
-            );
+            const url = "http://localhost:5000/admin/hostels";
+            const config = {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem("userData"))
+                        .token,
+                },
+            };
+            const Hostels = await axios.get(url, config);
+            //console.log(Hostels.data);
             this.setState(() => ({ hostels: Hostels.data }));
         } catch (e) {}
     };
@@ -23,34 +29,40 @@ class Currenthostel extends React.Component {
     handleSelected = (name, id) => {
         this.setState(() => ({
             selectedOptionName: name,
-            selectedOptionId: id
+            selectedOptionId: id,
         }));
     };
 
-    handleRemove = async e => {
+    handleRemove = async (e) => {
         try {
             if (e.target.id === "yes") {
-                // sending delete request to
-                await axios.delete(
-                    `http://localhost:5000/admin/${this.state.selectedOptionId}`
-                );
+                // sending delete request
+                const url = `http://localhost:5000/admin/${this.state.selectedOptionId}`;
+                const config = {
+                    headers: {
+                        Authorization: JSON.parse(
+                            localStorage.getItem("userData")
+                        ).token,
+                    },
+                };
+                await axios.delete(url, config);
 
-                this.setState(prevState => ({
+                this.setState((prevState) => ({
                     hostels: prevState.hostels.filter(
-                        hostel => hostel._id !== this.state.selectedOptionId
-                    )
+                        (hostel) => hostel._id !== this.state.selectedOptionId
+                    ),
                 }));
             }
             this.setState(() => ({
                 selectedOptionName: undefined,
-                selectedOptionId: undefined
+                selectedOptionId: undefined,
             }));
         } catch (er) {}
     };
 
-    handleEdit = e => {
+    handleEdit = (e) => {
         const hostelDetail = this.state.hostels.find(
-            hostel => hostel._id === e.target.id
+            (hostel) => hostel._id === e.target.id
         );
         this.props.edithostel(hostelDetail);
     };
@@ -77,14 +89,24 @@ class Currenthostel extends React.Component {
                                     <div>
                                         <button
                                             className="removebutton"
+                                            onClick={(e) =>
+                                                this.props.showUsers(hostel)
+                                            }
+                                        >
+                                            Show Users
+                                        </button>
+                                        <button
+                                            className="removebutton"
                                             id={hostel._id}
                                             onClick={this.handleEdit}
+                                            disabled={hostel.Date !== null}
                                         >
                                             Edit
                                         </button>
                                         <button
                                             className="removebutton"
-                                            onClick={e =>
+                                            disabled={hostel.Date !== null}
+                                            onClick={(e) =>
                                                 this.handleSelected(
                                                     hostel.name,
                                                     hostel._id
