@@ -8,6 +8,7 @@ import Pagination from "./pagination";
 class ShowUsers extends React.Component {
     constructor(props) {
         super(props);
+        //console.log(props.hostel);
         this.state = {
             hostelName: props.hostel.name,
             totalUsers: props.hostel.users,
@@ -108,15 +109,16 @@ class ShowUsers extends React.Component {
                         disabled={this.todaysDate(this.props.hostel.Date)}
                     />
                 )}
-                {this.state.totalUsers > 30 && !this.state.search && (
-                    <Pagination
-                        totalPages={Math.ceil(
-                            this.state.totalUsers / this.state.limit
-                        )}
-                        pageChanged={this.pageChanged}
-                        reset={this.state.reset}
-                    />
-                )}
+                {this.state.totalUsers > this.state.limit &&
+                    !this.state.search && (
+                        <Pagination
+                            totalPages={Math.ceil(
+                                this.state.totalUsers / this.state.limit
+                            )}
+                            pageChanged={this.pageChanged}
+                            reset={this.state.reset}
+                        />
+                    )}
             </div>
         );
     }
